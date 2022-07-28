@@ -13,6 +13,8 @@ class PhotoAdapter : RecyclerView.Adapter<PhotoAdapter.ViewHolder>() {
 
     var photos: List<PhotoResponse> = emptyList()
 
+    var onClickPhoto: (PhotoResponse) -> Unit = {}
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemPhotoBinding.inflate(
@@ -31,9 +33,21 @@ class PhotoAdapter : RecyclerView.Adapter<PhotoAdapter.ViewHolder>() {
         return photos.size
     }
 
-    class ViewHolder(
+    inner class ViewHolder(
         private val binding: ItemPhotoBinding
     ) : RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            /**
+             * 밑의 작업을 하면
+             * 클릭 당시에 어댑터포지션에 있는 포토를 이벤트로 전달하게 됨
+             * 그런 다음 메인액티비티로 넘어가서 이 이벤트 등록을 해서 처리해야함
+             * 메인 액티비티 처리 부분을 2번이라고 주석 달겠음.
+             */
+            binding.root.setOnClickListener {
+                onClickPhoto(photos[adapterPosition])
+            }
+        }
 
         fun bind(photo: PhotoResponse) {
             // photo.height / photo.width.toFloat() -> 비율값구하기
